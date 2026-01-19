@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">Awa</string>
-    <string name="web_client_id">1020268878120-20dc5hg3c0urdpeohielv5mn984d3a8m.apps.googleusercontent.com</string>
+    <string name="app_name" translatable="false">AwA</string>
+    <string name="web_client_id" translatable="false">1020268878120-20dc5hg3c0urdpeohielv5mn984d3a8m.apps.googleusercontent.com</string>
+    <string name="sign_in_screen_welcome">Welcome to AwA!</string>
+    <string name="signed_as">You are signed as</string>
+    <string name="sign_out">Sign out</string>
 </resources>

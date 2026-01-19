@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in_screen_welcome">Добро пожаловать в AwA!</string>
+    <string name="signed_as">Вы вошли как</string>
+    <string name="sign_out">Разлогиниться</string>
+</resources>
