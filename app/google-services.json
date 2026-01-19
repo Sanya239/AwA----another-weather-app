@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1020268878120",
+    "project_id": "awa-0-58d56",
+    "storage_bucket": "awa-0-58d56.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020268878120:android:8e9a104f7c1c44410d981d",
+        "android_client_info": {
+          "package_name": "com.hehe.awa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020268878120-f1drs8a3qshfnga2a4651bddq191ksmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hehe.awa",
+            "certificate_hash": "365f0b93176c393c9106c0e776de57183f4e5d8b"
+          }
+        },
+        {
+          "client_id": "1020268878120-20dc5hg3c0urdpeohielv5mn984d3a8m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSOYf6JYyKjrzsl8jbjmeu5taR5FmPekk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020268878120-20dc5hg3c0urdpeohielv5mn984d3a8m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
