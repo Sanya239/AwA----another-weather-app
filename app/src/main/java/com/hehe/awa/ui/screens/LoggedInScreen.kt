@@ -1,51 +1,57 @@
 package com.hehe.awa.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseUser
 import com.hehe.awa.R
+import com.hehe.awa.data.UserProfile
 
 @Composable
-fun LoggedInScreen(user: FirebaseUser, onSignOut: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.signed_as),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+@OptIn(ExperimentalMaterial3Api::class)
+fun LoggedInScreen(
+    user: FirebaseUser,
+    profile: UserProfile?,
+    onOpenProfile: () -> Unit,
+) {
+    val name = profile?.name?.takeIf { it.isNotBlank() } ?: (user.displayName ?: user.email ?: "")
 
-        Text(
-            text = user.displayName ?: user.email ?: "",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 48.dp)
-        )
-
-        Button(
-            onClick = onSignOut,
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("") },
+                actions = {
+                    TextButton(onClick = onOpenProfile) {
+                        Text(stringResource(R.string.profile_title))
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+            )
+        },
+    ) { padding ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
         ) {
-            Text(stringResource(R.string.sign_out), fontSize = 16.sp)
+            Text(
+                text = stringResource(R.string.logged_as_format, name),
+                style = MaterialTheme.typography.headlineSmall,
+            )
         }
     }
 }

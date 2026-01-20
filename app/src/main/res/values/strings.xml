@@ -4,4 +4,13 @@
     <string name="sign_in_screen_welcome">Welcome to AwA!</string>
     <string name="signed_as">You are signed as</string>
     <string name="sign_out">Sign out</string>
+    <string name="profile_title">Profile</string>
+    <string name="back_to_menu">Back</string>
+    <string name="profile_name_label">Name</string>
+    <string name="profile_private_label">Private profile</string>
+    <string name="profile_tag_label">Tag</string>
+    <string name="logged_as_format">logged as %1$s</string>
+    <string name="save">Save</string>
+    <string name="tag_already_taken">Tag already taken</string>
+    <string name="tag_update_error">Failed to update tag</string>
 </resources>
