@@ -1,5 +1,9 @@
 package com.hehe.awa.ui.screens
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -11,6 +15,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.hehe.awa.data.UpdateResult
@@ -18,6 +24,7 @@ import com.hehe.awa.ui.viewmodel.MainViewModel
 
 @Composable
 fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
+    val context = LocalContext.current
     var currentUser by remember { mutableStateOf(auth.currentUser) }
     var activeScreen by remember { mutableStateOf<ActiveScreen>(ActiveScreen.Main) }
 
@@ -26,11 +33,32 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
     val friends by viewModel.friends.collectAsState()
     val requestUserNames by viewModel.requestUserNames.collectAsState()
 
+    val locationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) {}
+
     LaunchedEffect(Unit) {
         auth.addAuthStateListener { firebaseAuth ->
             currentUser = firebaseAuth.currentUser
         }
     }
+
+    LaunchedEffect(Unit) {
+        val hasCoarseLocation =
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasCoarseLocation) {
+            locationPermissionLauncher.launch(
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        }
+        viewModel.loadWeather(context)
+    }
+
 
     LaunchedEffect(currentUser?.uid) {
         val user = currentUser ?: return@LaunchedEffect
@@ -60,6 +88,7 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
 
                 ActiveScreen.Profile -> ProfileScreen(
                     profile = profile,
+                    weather = viewModel.weather.collectAsState().value,
                     onBack = { activeScreen = ActiveScreen.Main },
                     onSaveProfile = { newProfile ->
                         currentUser?.let {

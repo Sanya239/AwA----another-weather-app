@@ -9,6 +9,10 @@ import com.hehe.awa.data.FriendsRepository
 import com.hehe.awa.data.UpdateResult
 import com.hehe.awa.data.UserProfile
 import com.hehe.awa.data.UserProfileRepository
+import com.hehe.awa.data.Weather
+import com.hehe.awa.data.WeatherRepository
+import com.hehe.awa.data.getCurrentLocation
+import android.content.Context
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,9 +22,13 @@ class MainViewModel : ViewModel() {
     private val profileRepository = UserProfileRepository()
     private val friendRequestRepository = FriendRequestRepository()
     private val friendsRepository = FriendsRepository()
+    private val weatherRepository = WeatherRepository()
 
     private val _profile = MutableStateFlow<UserProfile?>(null)
     val profile: StateFlow<UserProfile?> = _profile.asStateFlow()
+
+    private val _weather = MutableStateFlow<Weather?>(null)
+    val weather: StateFlow<Weather?> = _weather.asStateFlow()
 
     private val _requests = MutableStateFlow<List<FriendRequest>>(emptyList())
     val requests: StateFlow<List<FriendRequest>> = _requests.asStateFlow()
@@ -132,11 +140,24 @@ class MainViewModel : ViewModel() {
         return profileRepository.getUserName(uid)
     }
 
+    fun loadWeather(context: Context) {
+        viewModelScope.launch {
+            val userLocation = getCurrentLocation(context)
+            if (userLocation != null) {
+                _weather.value = weatherRepository.getCurrentWeather(
+                    userLocation.latitude,
+                    userLocation.longitude
+                )
+            }
+        }
+    }
+
     fun clearData() {
         _profile.value = null
         _requests.value = emptyList()
         _friends.value = emptyList()
         _requestUserNames.value = emptyMap()
+        _weather.value = null
     }
 }
 
