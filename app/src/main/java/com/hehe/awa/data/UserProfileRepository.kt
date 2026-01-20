@@ -90,6 +90,11 @@ class UserProfileRepository {
         }.await()
         return result
     }
+
+    suspend fun getUserName(uid: String): String? {
+        val doc = usersCollection.document(uid).get().await()
+        return doc.getString("name")?.takeIf { it.isNotBlank() }
+    }
 }
 
 

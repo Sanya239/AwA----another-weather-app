@@ -8,10 +8,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.google.firebase.auth.FirebaseAuth
+import com.hehe.awa.data.Friend
+import com.hehe.awa.data.FriendRequest
+import com.hehe.awa.data.FriendRequestRepository
+import com.hehe.awa.data.FriendsRepository
 import com.hehe.awa.data.UpdateResult
 import com.hehe.awa.data.UserProfile
 import com.hehe.awa.data.UserProfileRepository
@@ -22,6 +25,8 @@ fun AppScreen(auth: FirebaseAuth) {
     var activeScreen by remember { mutableStateOf<ActiveScreen>(ActiveScreen.Main) }
     var profile by remember { mutableStateOf<UserProfile?>(null) }
     val repo = remember { UserProfileRepository() }
+    val friendRequestRepo = remember { FriendRequestRepository() }
+    val friendsRepo = remember { FriendsRepository() }
 
     LaunchedEffect(Unit) {
         auth.addAuthStateListener { firebaseAuth ->
@@ -48,6 +53,24 @@ fun AppScreen(auth: FirebaseAuth) {
                     user = currentUser!!,
                     profile = profile,
                     onOpenProfile = { activeScreen = ActiveScreen.Profile },
+                    onLoadRequests = {
+                        friendRequestRepo.getPendingRequests(currentUser!!.uid)
+                    },
+                    onLoadFriends = {
+                        friendsRepo.getFriends(currentUser!!.uid)
+                    },
+                    onCreateRequest = { toUid ->
+                        friendRequestRepo.createRequest(currentUser!!.uid, toUid)
+                    },
+                    onAcceptRequest = { requestId ->
+                        friendRequestRepo.acceptRequest(requestId)
+                    },
+                    onRejectRequest = { requestId ->
+                        friendRequestRepo.rejectRequest(requestId)
+                    },
+                    onGetUserName = { uid ->
+                        repo.getUserName(uid)
+                    },
                 )
 
                 ActiveScreen.Profile -> ProfileScreen(
