@@ -21,4 +21,5 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="cancel">Cancel</string>
+    <string name="remove_friend">Remove friend</string>
 </resources>

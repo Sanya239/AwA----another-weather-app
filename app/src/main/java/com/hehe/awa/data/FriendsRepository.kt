@@ -6,7 +6,8 @@ import kotlinx.coroutines.tasks.await
 
 data class Friend(
     val uid: String,
-    val name: String
+    val name: String,
+    val tag: String?
 )
 
 class FriendsRepository {
@@ -49,7 +50,8 @@ class FriendsRepository {
             val friendDoc = usersCollection.document(friendUid).get().await()
             if (friendDoc.exists()) {
                 val name = friendDoc.getString("name") ?: ""
-                friends.add(Friend(uid = friendUid, name = name))
+                val tag = friendDoc.getString("tag")
+                friends.add(Friend(uid = friendUid, name = name, tag = tag))
             }
         }
 

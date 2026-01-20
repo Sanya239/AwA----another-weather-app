@@ -99,5 +99,35 @@ class FriendRequestRepository {
             UpdateResult.Error(e.message, e)
         }
     }
+
+    suspend fun removeFriend(userUid: String, friendUid: String): UpdateResult {
+        return try {
+            val outgoingQuery = requestsCollection
+                .whereEqualTo("fromUid", userUid)
+                .whereEqualTo("toUid", friendUid)
+                .whereEqualTo("status", RequestStatus.ACCEPTED.name.lowercase())
+                .get()
+                .await()
+
+            val incomingQuery = requestsCollection
+                .whereEqualTo("fromUid", friendUid)
+                .whereEqualTo("toUid", userUid)
+                .whereEqualTo("status", RequestStatus.ACCEPTED.name.lowercase())
+                .get()
+                .await()
+
+            val allRequests = outgoingQuery.documents + incomingQuery.documents
+
+            allRequests.forEach { doc ->
+                requestsCollection.document(doc.id)
+                    .update("status", RequestStatus.REJECTED.name.lowercase())
+                    .await()
+            }
+
+            UpdateResult.Success
+        } catch (e: Exception) {
+            UpdateResult.Error(e.message, e)
+        }
+    }
 }
 

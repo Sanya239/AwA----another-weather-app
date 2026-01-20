@@ -5,28 +5,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.hehe.awa.data.Friend
-import com.hehe.awa.data.FriendRequest
-import com.hehe.awa.data.FriendRequestRepository
-import com.hehe.awa.data.FriendsRepository
 import com.hehe.awa.data.UpdateResult
-import com.hehe.awa.data.UserProfile
-import com.hehe.awa.data.UserProfileRepository
+import com.hehe.awa.ui.viewmodel.MainViewModel
 
 @Composable
-fun AppScreen(auth: FirebaseAuth) {
+fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
     var currentUser by remember { mutableStateOf(auth.currentUser) }
     var activeScreen by remember { mutableStateOf<ActiveScreen>(ActiveScreen.Main) }
-    var profile by remember { mutableStateOf<UserProfile?>(null) }
-    val repo = remember { UserProfileRepository() }
-    val friendRequestRepo = remember { FriendRequestRepository() }
-    val friendsRepo = remember { FriendsRepository() }
+
+    val profile by viewModel.profile.collectAsState()
+    val requests by viewModel.requests.collectAsState()
+    val friends by viewModel.friends.collectAsState()
+    val requestUserNames by viewModel.requestUserNames.collectAsState()
 
     LaunchedEffect(Unit) {
         auth.addAuthStateListener { firebaseAuth ->
@@ -37,10 +35,11 @@ fun AppScreen(auth: FirebaseAuth) {
     LaunchedEffect(currentUser?.uid) {
         val user = currentUser ?: return@LaunchedEffect
         activeScreen = ActiveScreen.Main
-        profile = repo.getOrCreate(
+        viewModel.loadProfile(
             uid = user.uid,
             fallbackName = user.displayName ?: user.email,
         )
+        viewModel.refreshData(user.uid)
     }
 
     Surface(
@@ -52,49 +51,32 @@ fun AppScreen(auth: FirebaseAuth) {
                 ActiveScreen.Main -> LoggedInScreen(
                     user = currentUser!!,
                     profile = profile,
+                    requests = requests,
+                    friends = friends,
+                    requestUserNames = requestUserNames,
+                    viewModel = viewModel,
                     onOpenProfile = { activeScreen = ActiveScreen.Profile },
-                    onLoadRequests = {
-                        friendRequestRepo.getPendingRequests(currentUser!!.uid)
-                    },
-                    onLoadFriends = {
-                        friendsRepo.getFriends(currentUser!!.uid)
-                    },
-                    onCreateRequest = { toUid ->
-                        friendRequestRepo.createRequest(currentUser!!.uid, toUid)
-                    },
-                    onAcceptRequest = { requestId ->
-                        friendRequestRepo.acceptRequest(requestId)
-                    },
-                    onRejectRequest = { requestId ->
-                        friendRequestRepo.rejectRequest(requestId)
-                    },
-                    onGetUserName = { uid ->
-                        repo.getUserName(uid)
-                    },
                 )
 
                 ActiveScreen.Profile -> ProfileScreen(
                     profile = profile,
                     onBack = { activeScreen = ActiveScreen.Main },
                     onSaveProfile = { newProfile ->
-                        var result: UpdateResult = UpdateResult.Success
                         currentUser?.let {
-                            result = repo.save(it.uid, newProfile)
-                        } ?: throw IllegalStateException("User not logged in")
-                        if (result is UpdateResult.Success) {
-                            profile = newProfile
-                        }
-                        result
+                            viewModel.saveProfile(it.uid, newProfile)
+                            UpdateResult.Success
+                        } ?: UpdateResult.Error("User not logged in", null)
                     },
                     onUpdateTag = { newTag ->
                         currentUser?.let { user ->
-                            repo.updateTag(user.uid, newTag)
-                        } ?: throw IllegalStateException("User not logged in")
+                            viewModel.updateTag(user.uid, newTag)
+                            UpdateResult.Success
+                        } ?: UpdateResult.Error("User not logged in", null)
                     },
                     onSignOut = {
                         auth.signOut()
                         currentUser = null
-                        profile = null
+                        viewModel.clearData()
                         activeScreen = ActiveScreen.Main
                     },
                 )

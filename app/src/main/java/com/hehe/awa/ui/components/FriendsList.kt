@@ -15,6 +15,7 @@ import com.hehe.awa.data.Friend
 @Composable
 fun FriendsList(
     friends: List<Friend>,
+    onFriendClick: (Friend) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -24,11 +25,10 @@ fun FriendsList(
             modifier = Modifier.padding(16.dp)
         )
         friends.forEach { friend ->
-            Text(
-                text = friend.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            FriendView(
+                name = friend.name,
+                onClick = { onFriendClick(friend) },
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
