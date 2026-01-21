@@ -14,22 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hehe.awa.R
+import com.hehe.awa.data.Friend
 
 @Composable
 fun FriendDetailsDialog(
-    name: String,
-    tag: String?,
+    friend: Friend,
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(name) },
+        title = { Text(friend.name) },
         text = {
             Column {
-                Text(text = stringResource(R.string.profile_name_label) + ": $name")
+                Text(text = stringResource(R.string.profile_name_label) + ": ${friend.name}")
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = stringResource(R.string.profile_tag_label) + ": ${tag ?: "No tag"}")
+                Text(text = stringResource(R.string.profile_tag_label) + ": ${friend.tag ?: "No tag"}")
+                WeatherView(friend.weather)
             }
         },
         confirmButton = {

@@ -27,6 +27,7 @@ fun FriendsList(
         friends.forEach { friend ->
             FriendView(
                 name = friend.name,
+                weather = friend.weather,
                 onClick = { onFriendClick(friend) },
                 modifier = Modifier.fillMaxWidth()
             )

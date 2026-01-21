@@ -11,6 +11,7 @@ import com.hehe.awa.data.UserProfile
 import com.hehe.awa.data.UserProfileRepository
 import com.hehe.awa.data.Weather
 import com.hehe.awa.data.WeatherRepository
+import com.hehe.awa.data.UserWeatherRepository
 import com.hehe.awa.data.getCurrentLocation
 import android.content.Context
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ class MainViewModel : ViewModel() {
     private val friendRequestRepository = FriendRequestRepository()
     private val friendsRepository = FriendsRepository()
     private val weatherRepository = WeatherRepository()
+    private val userWeatherRepository = UserWeatherRepository()
 
     private val _profile = MutableStateFlow<UserProfile?>(null)
     val profile: StateFlow<UserProfile?> = _profile.asStateFlow()
@@ -140,14 +142,21 @@ class MainViewModel : ViewModel() {
         return profileRepository.getUserName(uid)
     }
 
-    fun loadWeather(context: Context) {
+    fun loadWeather(context: Context, uid: String) {
         viewModelScope.launch {
             val userLocation = getCurrentLocation(context)
             if (userLocation != null) {
-                _weather.value = weatherRepository.getCurrentWeather(
+                val weather = weatherRepository.getCurrentWeather(
                     userLocation.latitude,
                     userLocation.longitude
                 )
+                _weather.value = weather
+
+                val profile = _profile.value
+                if (weather != null && profile != null && !profile.isPrivate) {
+                    userWeatherRepository.saveUserWeather(uid, weather)
+                    loadFriends(uid)
+                }
             }
         }
     }

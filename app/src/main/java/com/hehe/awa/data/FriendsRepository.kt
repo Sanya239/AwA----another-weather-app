@@ -7,13 +7,15 @@ import kotlinx.coroutines.tasks.await
 data class Friend(
     val uid: String,
     val name: String,
-    val tag: String?
+    val tag: String?,
+    val weather: Weather? = null
 )
 
 class FriendsRepository {
     private val db = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
     private val requestsCollection = db.collection("friend_requests")
+    private val userWeatherRepository = UserWeatherRepository()
 
     suspend fun getFriends(uid: String): List<Friend> {
         val outgoingQuery = requestsCollection
@@ -51,7 +53,8 @@ class FriendsRepository {
             if (friendDoc.exists()) {
                 val name = friendDoc.getString("name") ?: ""
                 val tag = friendDoc.getString("tag")
-                friends.add(Friend(uid = friendUid, name = name, tag = tag))
+                val weather = userWeatherRepository.getUserWeather(friendUid)
+                friends.add(Friend(uid = friendUid, name = name, tag = tag, weather = weather))
             }
         }
 

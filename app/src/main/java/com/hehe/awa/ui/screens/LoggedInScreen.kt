@@ -189,8 +189,7 @@ fun LoggedInScreen(
 
     selectedFriend?.let { friend ->
         FriendDetailsDialog(
-            name = friend.name,
-            tag = friend.tag,
+            friend,
             onDismiss = { selectedFriend = null },
             onRemove = {
                 viewModel.removeFriend(user.uid, friend.uid)

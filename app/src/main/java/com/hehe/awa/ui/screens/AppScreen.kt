@@ -56,9 +56,7 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         }
-        viewModel.loadWeather(context)
     }
-
 
     LaunchedEffect(currentUser?.uid) {
         val user = currentUser ?: return@LaunchedEffect
@@ -68,6 +66,13 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
             fallbackName = user.displayName ?: user.email,
         )
         viewModel.refreshData(user.uid)
+    }
+
+    LaunchedEffect(currentUser?.uid, profile) {
+        val user = currentUser ?: return@LaunchedEffect
+        if (profile != null) {
+            viewModel.loadWeather(context, user.uid)
+        }
     }
 
     Surface(
