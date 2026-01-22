@@ -61,6 +61,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation(libs.androidx.navigation.compose)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
@@ -71,5 +73,6 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.work.runtime.ktx)
 
 }

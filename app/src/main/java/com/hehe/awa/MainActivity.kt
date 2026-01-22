@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.hehe.awa.ui.screens.AppScreen
 import com.hehe.awa.ui.theme.AwaTheme
+import com.hehe.awa.work.WeatherWorkManager
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
@@ -17,6 +18,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
         enableEdgeToEdge()
+        
+        WeatherWorkManager.scheduleWeatherUpdate(this)
+        
         setContent {
             AwaTheme {
                 AppScreen(auth)

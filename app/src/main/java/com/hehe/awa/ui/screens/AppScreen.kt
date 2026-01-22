@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.hehe.awa.data.UpdateResult
 import com.hehe.awa.ui.viewmodel.MainViewModel
@@ -26,7 +29,6 @@ import com.hehe.awa.ui.viewmodel.MainViewModel
 fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
     val context = LocalContext.current
     var currentUser by remember { mutableStateOf(auth.currentUser) }
-    var activeScreen by remember { mutableStateOf<ActiveScreen>(ActiveScreen.Main) }
 
     val profile by viewModel.profile.collectAsState()
     val requests by viewModel.requests.collectAsState()
@@ -60,7 +62,6 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
 
     LaunchedEffect(currentUser?.uid) {
         val user = currentUser ?: return@LaunchedEffect
-        activeScreen = ActiveScreen.Main
         viewModel.loadProfile(
             uid = user.uid,
             fallbackName = user.displayName ?: user.email,
@@ -75,26 +76,32 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
         }
     }
 
+    val navController = rememberNavController()
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        if (currentUser != null) {
-            when (activeScreen) {
-                ActiveScreen.Main -> LoggedInScreen(
+        NavHost(
+            navController = navController,
+            startDestination = (if (auth.currentUser == null) Route.Auth.route else Route.Home.route)
+        ) {
+            composable(Route.Home.route) {
+                LoggedInScreen(
                     user = currentUser!!,
                     profile = profile,
                     requests = requests,
                     friends = friends,
                     requestUserNames = requestUserNames,
                     viewModel = viewModel,
-                    onOpenProfile = { activeScreen = ActiveScreen.Profile },
+                    onOpenProfile = { navController.navigate(Route.Profile.route) },
                 )
-
-                ActiveScreen.Profile -> ProfileScreen(
+            }
+            composable(Route.Profile.route) {
+                ProfileScreen(
                     profile = profile,
                     weather = viewModel.weather.collectAsState().value,
-                    onBack = { activeScreen = ActiveScreen.Main },
+                    onBack = { navController.navigate(Route.Home.route) },
                     onSaveProfile = { newProfile ->
                         currentUser?.let {
                             viewModel.saveProfile(it.uid, newProfile)
@@ -111,21 +118,18 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
                         auth.signOut()
                         currentUser = null
                         viewModel.clearData()
-                        activeScreen = ActiveScreen.Main
+                        navController.navigate(Route.Auth.route)
                     },
                 )
             }
-        } else {
-            SignInScreen(
-                onSignInSuccess = { user ->
-                    currentUser = user
-                }
-            )
+            composable(Route.Auth.route) {
+                SignInScreen(
+                    onSignInSuccess = { user ->
+                        currentUser = user
+                        navController.navigate(Route.Home.route)
+                    }
+                )
+            }
         }
     }
-}
-
-private enum class ActiveScreen {
-    Main,
-    Profile,
 }
