@@ -18,6 +18,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hehe.awa.R
 import com.hehe.awa.data.Weather
+import kotlin.math.roundToInt
 
 @Composable
 fun WeatherView(weather: Weather?, modifier: Modifier = Modifier) {
@@ -33,7 +34,6 @@ fun WeatherView(weather: Weather?, modifier: Modifier = Modifier) {
             val iconUrl = "https:${w.current.condition.icon}"
 
             Column {
-                Text(stringResource(R.string.location, w.location.name, w.location.country))
                 Text(stringResource(R.string.last_updated, w.current.last_updated))
                 Text(stringResource(R.string.condition, w.current.condition.text))
 
@@ -50,6 +50,7 @@ fun WeatherView(weather: Weather?, modifier: Modifier = Modifier) {
                 }
 
                 Text(stringResource(R.string.temperature, w.current.temp_c))
+                Text(stringResource(R.string.feels_like, w.current.temp_c.roundToInt()))
                 Text(stringResource(R.string.wind, w.current.wind_kph))
                 Text(stringResource(R.string.humidity, w.current.humidity))
                 Text(stringResource(R.string.cloud, w.current.cloud))

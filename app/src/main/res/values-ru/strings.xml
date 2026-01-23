@@ -36,6 +36,7 @@
     <string name="last_updated">Последнее обновление: %1$s</string>
     <string name="condition">Условия: %1$s</string>
     <string name="temperature">Температура: %1$s°C</string>
+    <string name="feels_like">Ощущается как: %1$d°C</string>
     <string name="wind">Ветер: %1$s км/ч</string>
     <string name="humidity">Влажность: %1$s%%</string>
     <string name="cloud">Облачность: %1$s%%</string>

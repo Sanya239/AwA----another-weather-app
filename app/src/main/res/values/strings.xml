@@ -37,6 +37,7 @@
     <string name="last_updated">Last updated: %1$s</string>
     <string name="condition">Condition: %1$s</string>
     <string name="temperature">Temperature: %1$s°C</string>
+    <string name="feels_like">Feels like: %1$d°C</string>
     <string name="wind">Wind: %1$s km/h</string>
     <string name="humidity">Humidity: %1$s%%</string>
     <string name="cloud">Cloud: %1$s%%</string>

@@ -82,7 +82,12 @@ class MainViewModel : ViewModel() {
     }
 
     private suspend fun loadFriends(uid: String) {
-        _friends.value = friendsRepository.getFriends(uid)
+        val friends = friendsRepository.getFriends(uid)
+        // Сортируем по температуре: сверху теплее, снизу холоднее
+        // Друзья без погоды идут в конец
+        _friends.value = friends.sortedByDescending { friend ->
+            friend.weather?.current?.temp_c ?: Double.NEGATIVE_INFINITY
+        }
     }
 
     fun refreshData(uid: String) {
