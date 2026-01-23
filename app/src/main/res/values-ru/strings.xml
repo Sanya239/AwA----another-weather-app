@@ -8,7 +8,7 @@
     <string name="profile_name_label">Имя</string>
     <string name="profile_private_label">Приватный профиль</string>
     <string name="profile_tag_label">Тег</string>
-    <string name="logged_as_format">вошли как %1$s</string>
+    <string name="logged_as_format">Вы вошли как %1$s</string>
     <string name="save">Сохранить</string>
     <string name="tag_already_taken">Тег уже занят</string>
     <string name="tag_update_error">Не удалось обновить тег</string>
@@ -16,10 +16,12 @@
     <string name="enter_tag">Введите тег</string>
     <string name="tag_not_found">Тег не найден</string>
     <string name="friend_requests">Запросы в друзья</string>
+    <string name="no_friend_requests">Пока нет запросов в друзья</string>
     <string name="friends">Друзья</string>
     <string name="accept">Принять</string>
     <string name="reject">Отклонить</string>
     <string name="cancel">Отмена</string>
+    <string name="close">Закрыть</string>
     <string name="remove_friend">Удалить друга</string>
     <string name="no_friends_message">Вы пока не добавили друзей</string>
     <string name="cannot_add_yourself">Нельзя добавить самого себя</string>

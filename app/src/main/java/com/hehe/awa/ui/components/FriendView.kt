@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,18 +26,24 @@ fun FriendView(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(16.dp),
+            .padding(vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = name)
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyLarge,
+        )
         
         weather?.let { w ->
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "${w.current.temp_c}°C")
+                Text(
+                    text = "${w.current.temp_c}°C",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
                 val iconUrl = "https:${w.current.condition.icon}"
                 AsyncImage(
                     model = iconUrl,

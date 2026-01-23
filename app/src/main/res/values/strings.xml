@@ -9,7 +9,7 @@
     <string name="profile_name_label">Name</string>
     <string name="profile_private_label">Private profile</string>
     <string name="profile_tag_label">Tag</string>
-    <string name="logged_as_format">logged as %1$s</string>
+    <string name="logged_as_format">You logged as %1$s</string>
     <string name="save">Save</string>
     <string name="tag_already_taken">Tag already taken</string>
     <string name="tag_update_error">Failed to update tag</string>
@@ -17,10 +17,12 @@
     <string name="enter_tag">Enter tag</string>
     <string name="tag_not_found">Tag not found</string>
     <string name="friend_requests">Friend requests</string>
+    <string name="no_friend_requests">No friend requests yet</string>
     <string name="friends">Friends</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="remove_friend">Remove friend</string>
     <string name="no_friends_message">You haven\'t added any friends yet</string>
     <string name="cannot_add_yourself">Cannot add yourself</string>

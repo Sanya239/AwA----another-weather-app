@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -43,6 +44,7 @@ import com.hehe.awa.ui.components.FriendDetailsDialog
 import com.hehe.awa.ui.components.FriendsList
 import com.hehe.awa.ui.components.IncomingRequestItem
 import com.hehe.awa.ui.components.OutgoingRequestItem
+import com.hehe.awa.ui.components.SectionCard
 import com.hehe.awa.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -94,7 +96,8 @@ fun LoggedInScreen(
                         WindowInsets.navigationBars
                     )
                     .padding(16.dp)
-            ) {
+                    .height(56.dp),
+                ) {
                 Text(stringResource(R.string.add_friend))
             }
         }
@@ -113,72 +116,103 @@ fun LoggedInScreen(
                     state = listState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = 80.dp) // Отступ для кнопки внизу
+                        .padding(bottom = 80.dp)
                 ) {
-                item {
-                    Text(
-                        text = stringResource(R.string.logged_as_format, name),
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-
-                if (requests.isNotEmpty()) {
                     item {
-                        Text(
-                            text = stringResource(R.string.friend_requests),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-
-                    val outgoingRequests = requests.filter { it.fromUid == user.uid }
-                    val incomingRequests = requests.filter { it.toUid == user.uid }
-
-                    items(outgoingRequests) { request ->
-                        val userName = requestUserNames[request.toUid] ?: request.toUid
-                        OutgoingRequestItem(
-                            userName = userName,
-                            onReject = {
-                                viewModel.rejectRequest(user.uid, request.id)
-                            }
-                        )
-                    }
-
-                    items(incomingRequests) { request ->
-                        val userName = requestUserNames[request.fromUid] ?: request.fromUid
-                        IncomingRequestItem(
-                            userName = userName,
-                            onAccept = {
-                                viewModel.acceptRequest(user.uid, request.id)
-                            },
-                            onReject = {
-                                viewModel.rejectRequest(user.uid, request.id)
-                            }
-                        )
-                    }
-                }
-
-                item {
-                    if (friends.isEmpty()) {
-                        Text(
-                            text = stringResource(R.string.no_friends_message),
-                            style = MaterialTheme.typography.bodyLarge,
+                        SectionCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
-                        )
-                    } else {
-                        FriendsList(
-                            friends = friends,
-                            onFriendClick = { friend ->
-                                selectedFriend = friend
-                            },
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                        )
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.logged_as_format, name),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
                     }
-                }
+
+                    item {
+                        SectionCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.friend_requests),
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+
+                            val outgoingRequests = requests.filter { it.fromUid == user.uid }
+                            val incomingRequests = requests.filter { it.toUid == user.uid }
+                            val orderedRequests = outgoingRequests + incomingRequests
+
+                            if (orderedRequests.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.no_friend_requests),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.padding(top = 8.dp),
+                                )
+                            } else {
+                                orderedRequests.forEachIndexed { index, request ->
+                                    if (request.fromUid == user.uid) {
+                                        val userName = requestUserNames[request.toUid] ?: request.toUid
+                                        OutgoingRequestItem(
+                                            userName = userName,
+                                            onReject = { viewModel.rejectRequest(user.uid, request.id) },
+                                            modifier = Modifier.fillMaxWidth(),
+                                        )
+                                    } else {
+                                        val userName = requestUserNames[request.fromUid] ?: request.fromUid
+                                        IncomingRequestItem(
+                                            userName = userName,
+                                            onAccept = { viewModel.acceptRequest(user.uid, request.id) },
+                                            onReject = { viewModel.rejectRequest(user.uid, request.id) },
+                                            modifier = Modifier.fillMaxWidth(),
+                                        )
+                                    }
+
+                                    if (index < orderedRequests.size - 1) {
+                                        HorizontalDivider(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        SectionCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.friends),
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+
+                            if (friends.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.no_friends_message),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    modifier = Modifier.padding(top = 8.dp),
+                                )
+                            } else {
+                                FriendsList(
+                                    friends = friends,
+                                    onFriendClick = { friend -> selectedFriend = friend },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp),
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

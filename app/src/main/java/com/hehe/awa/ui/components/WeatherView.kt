@@ -20,43 +20,43 @@ import com.hehe.awa.R
 import com.hehe.awa.data.Weather
 
 @Composable
-fun WeatherView(weather: Weather?) {
-    weather?.let { w ->
-        Spacer(modifier = Modifier.height(16.dp))
+fun WeatherView(weather: Weather?, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        weather?.let { w ->
+            Text(
+                text = stringResource(R.string.weather),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
 
-        Text(
-            text = stringResource(R.string.weather),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+            val context = LocalContext.current
+            val iconUrl = "https:${w.current.condition.icon}"
 
-        val context = LocalContext.current
-        val iconUrl = "https:${w.current.condition.icon}"
+            Column {
+                Text(stringResource(R.string.location, w.location.name, w.location.country))
+                Text(stringResource(R.string.last_updated, w.current.last_updated))
+                Text(stringResource(R.string.condition, w.current.condition.text))
 
-        Column {
-            Text(stringResource(R.string.location, w.location.name, w.location.country))
-            Text(stringResource(R.string.last_updated, w.current.last_updated))
-            Text(stringResource(R.string.condition, w.current.condition.text))
+                Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(context)
+                                .data(iconUrl)
+                                .build()
+                        ),
+                        contentDescription = w.current.condition.text,
+                        modifier = Modifier.size(64.dp)
+                    )
+                }
 
-            Row(modifier = Modifier.padding(vertical = 8.dp)) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(context)
-                            .data(iconUrl)
-                            .build()
-                    ),
-                    contentDescription = w.current.condition.text,
-                    modifier = Modifier.size(64.dp)
-                )
+                Text(stringResource(R.string.temperature, w.current.temp_c))
+                Text(stringResource(R.string.wind, w.current.wind_kph))
+                Text(stringResource(R.string.humidity, w.current.humidity))
+                Text(stringResource(R.string.cloud, w.current.cloud))
             }
-
-            Text(stringResource(R.string.temperature, w.current.temp_c))
-            Text(stringResource(R.string.wind, w.current.wind_kph))
-            Text(stringResource(R.string.humidity, w.current.humidity))
-            Text(stringResource(R.string.cloud, w.current.cloud))
         }
-    }
-    if (weather == null){
-        Text(stringResource(R.string.weather_load_error))
+        if (weather == null){
+            Text(stringResource(R.string.weather_load_error))
+        }
     }
 }

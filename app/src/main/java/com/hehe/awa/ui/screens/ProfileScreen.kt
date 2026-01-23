@@ -37,6 +37,7 @@ import com.hehe.awa.R
 import com.hehe.awa.data.UpdateResult
 import com.hehe.awa.data.UserProfile
 import com.hehe.awa.data.Weather
+import com.hehe.awa.ui.components.SectionCard
 import com.hehe.awa.ui.components.WeatherView
 import kotlinx.coroutines.launch
 
@@ -145,48 +146,54 @@ fun ProfileScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Top,
         ) {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { newValue ->
-                    if (newValue.length <= 60) {
-                        name = newValue
-                    }
-                },
-                label = { Text(stringResource(R.string.profile_name_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                supportingText = {
-                    Text(stringResource(R.string.name_length_format, name.length))
-                },
-            )
+            SectionCard(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { newValue ->
+                        if (newValue.length <= 60) {
+                            name = newValue
+                        }
+                    },
+                    label = { Text(stringResource(R.string.profile_name_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    supportingText = {
+                        Text(stringResource(R.string.name_length_format, name.length))
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = tag,
+                    onValueChange = { tag = it },
+                    label = { Text(stringResource(R.string.profile_tag_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(R.string.profile_private_label),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Switch(
+                        checked = isPrivate,
+                        onCheckedChange = { isPrivate = it },
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = tag,
-                onValueChange = { tag = it },
-                label = { Text(stringResource(R.string.profile_tag_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = stringResource(R.string.profile_private_label),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Switch(
-                    checked = isPrivate,
-                    onCheckedChange = { isPrivate = it },
-                )
+            SectionCard(modifier = Modifier.fillMaxWidth()) {
+                WeatherView(weather = weather)
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
-            WeatherView(weather)
 
             Spacer(modifier = Modifier.height(16.dp))
 

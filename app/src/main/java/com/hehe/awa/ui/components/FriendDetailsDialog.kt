@@ -24,12 +24,9 @@ fun FriendDetailsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(friend.name) },
+        title = { Text(friend.name + "(@" + friend.tag+")" ) },
         text = {
             Column {
-                Text(text = stringResource(R.string.profile_name_label) + ": ${friend.name}")
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = stringResource(R.string.profile_tag_label) + ": ${friend.tag ?: stringResource(R.string.no_tag)}")
                 WeatherView(friend.weather)
             }
         },
@@ -43,7 +40,7 @@ fun FriendDetailsDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(R.string.close))
             }
         }
     )
