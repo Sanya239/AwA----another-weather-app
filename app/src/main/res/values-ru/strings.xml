@@ -14,7 +14,8 @@
     <string name="tag_already_taken">Тег уже занят</string>
     <string name="tag_update_error">Не удалось обновить тег</string>
     <string name="add_friend">Добавить друга</string>
-    <string name="enter_tag">Введите тег</string>
+    <string name="enter_tag">Введите тег друга</string>
+    <string name="tag_info_tooltip">Тег можно посмотреть и изменить в настройках профиля</string>
     <string name="tag_not_found">Тег не найден</string>
     <string name="friend_requests">Запросы в друзья</string>
     <string name="no_friend_requests">Пока нет запросов в друзья</string>
@@ -47,6 +48,7 @@
     <string name="cloud">Облачность: %1$s%%</string>
     <string name="weather_load_error">Произошла неожиданная ошибка при загрузке погоды</string>
     <string name="name_length_format">%1$d/60</string>
+    <string name="tag_length_format">%1$d/20</string>
     <string name="privacy_policy_button">Политика конфиденциальности</string>
     <string name="privacy_policy_title">Политика конфиденциальности приложения «AwA»</string>
     <string name="privacy_policy_text">Мы ценим вашу конфиденциальность и заботимся о защите ваших данных. Пожалуйста, ознакомьтесь с тем, какие данные мы собираем и как их используем.\n\n1. Какие данные мы собираем:\n\nИнформация об аккаунте: email на который зарегистрирван ваш google аккаунт\n\nГеолокация: неточная геолокация 1 раз в 60 минут\n\nДанные устройства: токены для пуш-уведомлений\n\n2. Как мы используем данные:\n\nДля отображения погоды около друзей\n\nДля отправки уведомлений\n\n3. С кем мы делимся данными:\n\nСервисами, необходимыми для работы приложения: Google Firebase (для уведомлений) и WeatherApi.com (для погоды)\n\n4. Управление вашими данными:\n\nВы можете отключить уведомления и геолокацию в настройках приложения\n\n5. Контакты:\n\nПо вопросам конфиденциальности пишите на: alex.bogdanov05@mail.ru\n\nДата вступления в силу: 23 января 2026</string>

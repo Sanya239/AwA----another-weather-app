@@ -196,10 +196,17 @@ fun ProfileScreen(
 
                 OutlinedTextField(
                     value = tag,
-                    onValueChange = { tag = it },
+                    onValueChange = { newValue ->
+                        if (newValue.length <= 20) {
+                            tag = newValue
+                        }
+                    },
                     label = { Text(stringResource(R.string.profile_tag_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
+                    supportingText = {
+                        Text(stringResource(R.string.tag_length_format, tag.length))
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

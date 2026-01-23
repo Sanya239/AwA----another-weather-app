@@ -16,6 +16,7 @@
     <string name="tag_update_error">Failed to update tag</string>
     <string name="add_friend">Add friend</string>
     <string name="enter_tag">Enter tag</string>
+    <string name="tag_info_tooltip">You can view and change your tag in the profile settings</string>
     <string name="tag_not_found">Tag not found</string>
     <string name="friend_requests">Friend requests</string>
     <string name="no_friend_requests">No friend requests yet</string>
@@ -48,6 +49,7 @@
     <string name="cloud">Cloud: %1$s%%</string>
     <string name="weather_load_error">Unexpected error happened when loading weather</string>
     <string name="name_length_format">%1$d/60</string>
+    <string name="tag_length_format">%1$d/20</string>
     <string name="privacy_policy_button">Privacy Policy</string>
     <string name="privacy_policy_title">Privacy Policy of the «AwA» Application</string>
     <string name="privacy_policy_text">We value your privacy and care about protecting your data. Please read about what data we collect and how we use it.\n\n1. What data we collect:\n\nAccount information: email address registered with your Google account\n\nGeolocation: inaccurate geolocation once every 60 minutes\n\nDevice data: tokens for push notifications\n\n2. How we use data:\n\nTo display weather near friends\n\nTo send notifications\n\n3. Who we share data with:\n\nServices necessary for the application to work: Google Firebase (for notifications) and WeatherApi.com (for weather)\n\n4. Managing your data:\n\nYou can disable notifications and geolocation in the application settings\n\n5. Contacts:\n\nFor privacy questions, write to: alex.bogdanov05@mail.ru\n\nEffective date: January 23, 2026</string>

@@ -40,10 +40,7 @@ fun FriendDetailsDialog(
             }
         },
         confirmButton = {
-            Button(
-                onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Button(onClick = onDismiss) {
                 Text(stringResource(R.string.close))
             }
         },
@@ -51,8 +48,9 @@ fun FriendDetailsDialog(
             TextButton(
                 onClick = { showConfirmDialog = true },
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
-                )
+                    contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                ),
+                modifier = Modifier.padding(end = 36.dp)
             ) {
                 Text(stringResource(R.string.remove_friend))
             }
