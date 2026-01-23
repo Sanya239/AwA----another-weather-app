@@ -17,6 +17,29 @@ sealed class UpdateResult {
 class UserProfileRepository {
     private val db = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
+    private val userTagsCollection = db.collection("user_tags")
+
+    private fun generateRandomTag(): String {
+        val letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        return (1..10)
+            .map { letters.random() }
+            .joinToString("")
+    }
+
+    private suspend fun generateUniqueTag(): String {
+        var tag: String
+        var attempts = 0
+        do {
+            tag = generateRandomTag()
+            val tagDoc = userTagsCollection.document(tag).get().await()
+            attempts++
+            if (attempts > 100) {
+                // Fallback: если не удалось найти уникальный тег за 100 попыток, добавляем случайное число
+                tag = generateRandomTag() + (1000..9999).random().toString()
+            }
+        } while (tagDoc.exists() && attempts <= 100)
+        return tag
+    }
 
     suspend fun getOrCreate(uid: String, fallbackName: String?): UserProfile {
         val docRef = usersCollection.document(uid)
@@ -28,14 +51,24 @@ class UserProfileRepository {
             return UserProfile(name = name, isPrivate = isPrivate, tag = tag)
         }
 
-        val profile = UserProfile(name = fallbackName.orEmpty(), isPrivate = false, tag = null)
+        // Генерируем случайный тег для нового пользователя
+        val randomTag = generateUniqueTag()
+        
+        val profile = UserProfile(name = fallbackName.orEmpty(), isPrivate = false, tag = randomTag)
+        
+        // Сохраняем профиль с тегом
         docRef.set(
             mapOf(
                 "name" to profile.name,
                 "isPrivate" to profile.isPrivate,
+                "tag" to randomTag,
             ),
             SetOptions.merge(),
         ).await()
+        
+        // Регистрируем тег в коллекции user_tags
+        userTagsCollection.document(randomTag).set(mapOf("uid" to uid)).await()
+        
         return profile
     }
 

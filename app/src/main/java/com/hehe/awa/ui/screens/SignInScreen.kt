@@ -35,6 +35,8 @@ fun SignInScreen(onSignInSuccess: (FirebaseUser) -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    val signInErrorMessage = stringResource(R.string.sign_in_error)
+    val errorPrefix = stringResource(R.string.error_prefix)
 
     Column(
         modifier = Modifier
@@ -59,11 +61,11 @@ fun SignInScreen(onSignInSuccess: (FirebaseUser) -> Unit) {
                         if (user != null) {
                             onSignInSuccess(user)
                         } else {
-                            errorMessage = "Не удалось войти"
+                            errorMessage = signInErrorMessage
                         }
                     } catch (e: Exception) {
                         Log.e("SignIn", "Error during sign in", e)
-                        errorMessage = "Ошибка: ${e.message}"
+                        errorMessage = "$errorPrefix ${e.message ?: ""}"
                     } finally {
                         isLoading = false
                     }
@@ -80,7 +82,7 @@ fun SignInScreen(onSignInSuccess: (FirebaseUser) -> Unit) {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             } else {
-                Text("Войти через Google", fontSize = 16.sp)
+                Text(stringResource(R.string.sign_in_with_google), fontSize = 16.sp)
             }
         }
 

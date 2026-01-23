@@ -29,7 +29,7 @@ fun FriendDetailsDialog(
             Column {
                 Text(text = stringResource(R.string.profile_name_label) + ": ${friend.name}")
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = stringResource(R.string.profile_tag_label) + ": ${friend.tag ?: "No tag"}")
+                Text(text = stringResource(R.string.profile_tag_label) + ": ${friend.tag ?: stringResource(R.string.no_tag)}")
                 WeatherView(friend.weather)
             }
         },

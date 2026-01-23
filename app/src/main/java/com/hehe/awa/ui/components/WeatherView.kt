@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.hehe.awa.R
 import com.hehe.awa.data.Weather
 
 @Composable
@@ -23,7 +25,7 @@ fun WeatherView(weather: Weather?) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Weather",
+            text = stringResource(R.string.weather),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -32,9 +34,9 @@ fun WeatherView(weather: Weather?) {
         val iconUrl = "https:${w.current.condition.icon}"
 
         Column {
-            Text("Location: ${w.location.name}, ${w.location.country}")
-            Text("Last updated: ${w.current.last_updated}")
-            Text("Condition: ${w.current.condition.text}")
+            Text(stringResource(R.string.location, w.location.name, w.location.country))
+            Text(stringResource(R.string.last_updated, w.current.last_updated))
+            Text(stringResource(R.string.condition, w.current.condition.text))
 
             Row(modifier = Modifier.padding(vertical = 8.dp)) {
                 Image(
@@ -48,13 +50,13 @@ fun WeatherView(weather: Weather?) {
                 )
             }
 
-            Text("Temperature: ${w.current.temp_c}°C")
-            Text("Wind: ${w.current.wind_kph} km/h")
-            Text("Humidity: ${w.current.humidity}%")
-            Text("Cloud: ${w.current.cloud}%")
+            Text(stringResource(R.string.temperature, w.current.temp_c))
+            Text(stringResource(R.string.wind, w.current.wind_kph))
+            Text(stringResource(R.string.humidity, w.current.humidity))
+            Text(stringResource(R.string.cloud, w.current.cloud))
         }
     }
     if (weather == null){
-        Text("Unexpected error happened when loading weather")
+        Text(stringResource(R.string.weather_load_error))
     }
 }

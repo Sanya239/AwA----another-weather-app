@@ -1,15 +1,18 @@
 package com.hehe.awa.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -62,6 +65,7 @@ fun LoggedInScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val tagNotFoundMessage = stringResource(R.string.tag_not_found)
+    val cannotAddYourselfMessage = stringResource(R.string.cannot_add_yourself)
 
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val listState = rememberLazyListState()
@@ -72,12 +76,6 @@ fun LoggedInScreen(
             TopAppBar(
                 title = { Text("") },
                 actions = {
-                    IconButton(onClick = { showAddDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.add_friend)
-                        )
-                    }
                     TextButton(onClick = onOpenProfile) {
                         Text(stringResource(R.string.profile_title))
                     }
@@ -87,19 +85,36 @@ fun LoggedInScreen(
                 ),
             )
         },
+        bottomBar = {
+            Button(
+                onClick = { showAddDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(
+                        WindowInsets.navigationBars
+                    )
+                    .padding(16.dp)
+            ) {
+                Text(stringResource(R.string.add_friend))
+            }
+        }
     ) { padding ->
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = { viewModel.refreshData(user.uid) },
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
         ) {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refreshData(user.uid) },
+                modifier = Modifier.fillMaxSize()
             ) {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 80.dp) // Отступ для кнопки внизу
+                ) {
                 item {
                     Text(
                         text = stringResource(R.string.logged_as_format, name),
@@ -142,20 +157,28 @@ fun LoggedInScreen(
                             }
                         )
                     }
-                    if(isRefreshing){
-                        item { Text("isRefreshing") }
-                    }
                 }
 
                 item {
-                    FriendsList(
-                        friends = friends,
-                        onFriendClick = { friend ->
-                            selectedFriend = friend
-                        },
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                    )
+                    if (friends.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.no_friends_message),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    } else {
+                        FriendsList(
+                            friends = friends,
+                            onFriendClick = { friend ->
+                                selectedFriend = friend
+                            },
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                        )
+                    }
+                }
                 }
             }
         }
@@ -172,7 +195,7 @@ fun LoggedInScreen(
                     if (toUid == null) {
                         snackbarHostState.showSnackbar(tagNotFoundMessage)
                     } else if (toUid == user.uid) {
-                        snackbarHostState.showSnackbar("Cannot add yourself")
+                        snackbarHostState.showSnackbar(cannotAddYourselfMessage)
                     } else {
                         viewModel.createRequest(user.uid, toUid)
                         showAddDialog = false

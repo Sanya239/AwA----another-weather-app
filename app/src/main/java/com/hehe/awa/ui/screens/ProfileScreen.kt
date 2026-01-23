@@ -59,6 +59,7 @@ fun ProfileScreen(
 
     val tagTakenMessage = stringResource(R.string.tag_already_taken)
     val tagUpdateErrorMessage = stringResource(R.string.tag_update_error)
+    val allGoodMessage = stringResource(R.string.all_good)
 
     LaunchedEffect(profile) {
         if (profile != null && !isInitialized) {
@@ -119,7 +120,7 @@ fun ProfileScreen(
                                             tag = if (currentTag.isNotEmpty()) currentTag else null
                                         )
                                     )
-                                    snackbarHostState.showSnackbar("all good")
+                                    snackbarHostState.showSnackbar(allGoodMessage)
                                 }
                             }
                         },
@@ -155,7 +156,7 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 supportingText = {
-                    Text("${name.length}/60")
+                    Text(stringResource(R.string.name_length_format, name.length))
                 },
             )
 

@@ -22,4 +22,22 @@
     <string name="reject">Reject</string>
     <string name="cancel">Cancel</string>
     <string name="remove_friend">Remove friend</string>
+    <string name="no_friends_message">You haven\'t added any friends yet</string>
+    <string name="cannot_add_yourself">Cannot add yourself</string>
+    <string name="all_good">All good</string>
+    <string name="user_not_logged_in">User not logged in</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_error">Failed to sign in</string>
+    <string name="error_prefix">Error: %1$s</string>
+    <string name="no_tag">No tag</string>
+    <string name="weather">Weather</string>
+    <string name="location">Location: %1$s, %2$s</string>
+    <string name="last_updated">Last updated: %1$s</string>
+    <string name="condition">Condition: %1$s</string>
+    <string name="temperature">Temperature: %1$s°C</string>
+    <string name="wind">Wind: %1$s km/h</string>
+    <string name="humidity">Humidity: %1$s%%</string>
+    <string name="cloud">Cloud: %1$s%%</string>
+    <string name="weather_load_error">Unexpected error happened when loading weather</string>
+    <string name="name_length_format">%1$d/60</string>
 </resources>
