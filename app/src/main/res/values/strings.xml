@@ -5,9 +5,10 @@
     <string name="signed_as">You are signed as</string>
     <string name="sign_out">Sign out</string>
     <string name="profile_title">Profile</string>
+    <string name="settings">Settings</string>
     <string name="back_to_menu">Back</string>
     <string name="profile_name_label">Name</string>
-    <string name="profile_private_label">Private profile</string>
+    <string name="profile_private_label">Stop weather updates</string>
     <string name="profile_tag_label">Tag</string>
     <string name="logged_as_format">You logged as %1$s</string>
     <string name="save">Save</string>
@@ -43,4 +44,9 @@
     <string name="cloud">Cloud: %1$s%%</string>
     <string name="weather_load_error">Unexpected error happened when loading weather</string>
     <string name="name_length_format">%1$d/60</string>
+    <string name="privacy_policy_button">Privacy Policy</string>
+    <string name="privacy_policy_title">Privacy Policy of the «AwA» Application</string>
+    <string name="privacy_policy_text">We value your privacy and care about protecting your data. Please read about what data we collect and how we use it.\n\n1. What data we collect:\n\nAccount information: email address registered with your Google account\n\nGeolocation: inaccurate geolocation once every 60 minutes\n\nDevice data: tokens for push notifications\n\n2. How we use data:\n\nTo display weather near friends\n\nTo send notifications\n\n3. Who we share data with:\n\nServices necessary for the application to work: Google Firebase (for notifications) and WeatherApi.com (for weather)\n\n4. Managing your data:\n\nYou can disable notifications and geolocation in the application settings\n\n5. Contacts:\n\nFor privacy questions, write to: alex.bogdanov05@mail.ru\n\nEffective date: January 23, 2026</string>
+    <string name="terms_of_use_title">Terms of Use</string>
+    <string name="terms_of_use_text">By using our application, you agree to these terms.\n\n1. Who can use:\n\nUsers from 0 years old\n\nUsers who agree to these terms\n\n2. Limitation of liability:\n\nWeather data is provided \"as is\". The developer is not responsible for its accuracy and decisions made based on this data.\n\nThe application may contain errors or temporary malfunctions.\n\n3. User rights and obligations:\n\nNot to use the application for illegal purposes\n\nNot to publish other people\'s personal data without consent\n\n4. Developer rights:\n\nTo make changes to the application and terms of use\n\nTo block users for violations of the rules</string>
 </resources>

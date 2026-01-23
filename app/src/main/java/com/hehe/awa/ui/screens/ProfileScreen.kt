@@ -1,15 +1,22 @@
 package com.hehe.awa.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +44,7 @@ import com.hehe.awa.R
 import com.hehe.awa.data.UpdateResult
 import com.hehe.awa.data.UserProfile
 import com.hehe.awa.data.Weather
+import com.hehe.awa.ui.components.PrivacyPolicyDialog
 import com.hehe.awa.ui.components.SectionCard
 import com.hehe.awa.ui.components.WeatherView
 import kotlinx.coroutines.launch
@@ -55,6 +63,7 @@ fun ProfileScreen(
     var tag by remember { mutableStateOf("") }
     var isPrivate by remember { mutableStateOf(false) }
     var isInitialized by remember { mutableStateOf(false) }
+    var showPrivacyDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -83,7 +92,7 @@ fun ProfileScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.profile_title)) },
+                title = { Text("") },
                 navigationIcon = {
                     TextButton(onClick = onBack) {
                         Text(stringResource(R.string.back_to_menu))
@@ -143,10 +152,18 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.Top,
         ) {
             SectionCard(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = stringResource(R.string.profile_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
                 OutlinedTextField(
                     value = name,
                     onValueChange = { newValue ->
@@ -174,16 +191,33 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = stringResource(R.string.profile_private_label),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth()) {
                     Switch(
                         checked = isPrivate,
                         onCheckedChange = { isPrivate = it },
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.profile_private_label),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(8.dp)
+                    )
+
+                }
+                
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(
+                        onClick = onSignOut,
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                        )
+                    ) {
+                        Text(stringResource(R.string.sign_out))
+                    }
                 }
             }
 
@@ -193,19 +227,23 @@ fun ProfileScreen(
                 WeatherView(weather = weather)
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = onSignOut,
+                onClick = { showPrivacyDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
             ) {
-                Text(stringResource(R.string.sign_out))
+                Text(stringResource(R.string.privacy_policy_button))
             }
         }
+    }
+
+    if (showPrivacyDialog) {
+        PrivacyPolicyDialog(
+            onDismiss = { showPrivacyDialog = false }
+        )
     }
 }
 

@@ -79,7 +79,7 @@ fun LoggedInScreen(
                 title = { Text("") },
                 actions = {
                     TextButton(onClick = onOpenProfile) {
-                        Text(stringResource(R.string.profile_title))
+                        Text(stringResource(R.string.settings))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
