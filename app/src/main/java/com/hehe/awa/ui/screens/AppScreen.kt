@@ -2,6 +2,7 @@ package com.hehe.awa.ui.screens
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +44,11 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
             contract = ActivityResultContracts.RequestPermission()
         ) {}
 
+    val notificationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) {}
+
     LaunchedEffect(Unit) {
         auth.addAuthStateListener { firebaseAuth ->
             currentUser = firebaseAuth.currentUser
@@ -60,6 +66,21 @@ fun AppScreen(auth: FirebaseAuth, viewModel: MainViewModel = viewModel()) {
             locationPermissionLauncher.launch(
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
+        }
+
+        // Запрашиваем разрешение на уведомления для Android 13+ (API 33+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasNotificationPermission =
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasNotificationPermission) {
+                notificationPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            }
         }
     }
 
