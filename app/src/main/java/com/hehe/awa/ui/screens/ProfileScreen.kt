@@ -37,13 +37,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.focusable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hehe.awa.R
 import com.hehe.awa.data.UpdateResult
 import com.hehe.awa.data.UserProfile
 import com.hehe.awa.data.Weather
+import com.hehe.awa.ui.components.ConfirmDialog
 import com.hehe.awa.ui.components.PrivacyPolicyDialog
 import com.hehe.awa.ui.components.SectionCard
 import com.hehe.awa.ui.components.WeatherView
@@ -64,8 +70,11 @@ fun ProfileScreen(
     var isPrivate by remember { mutableStateOf(false) }
     var isInitialized by remember { mutableStateOf(false) }
     var showPrivacyDialog by remember { mutableStateOf(false) }
+    var showSignOutConfirmDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     val tagTakenMessage = stringResource(R.string.tag_already_taken)
     val tagUpdateErrorMessage = stringResource(R.string.tag_update_error)
@@ -123,13 +132,17 @@ fun ProfileScreen(
                                             return@launch
                                         }
                                     }
-                                    onSaveProfile(
+                                    val result = onSaveProfile(
                                         UserProfile(
                                             name = name,
                                             isPrivate = isPrivate,
                                             tag = if (currentTag.isNotEmpty()) currentTag else null
                                         )
                                     )
+                                    if (result is UpdateResult.Success) {
+                                        focusManager.clearFocus()
+                                        keyboardController?.hide()
+                                    }
                                     snackbarHostState.showSnackbar(allGoodMessage)
                                 }
                             }
@@ -211,7 +224,7 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(
-                        onClick = onSignOut,
+                        onClick = { showSignOutConfirmDialog = true },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                         )
@@ -243,6 +256,20 @@ fun ProfileScreen(
     if (showPrivacyDialog) {
         PrivacyPolicyDialog(
             onDismiss = { showPrivacyDialog = false }
+        )
+    }
+
+    if (showSignOutConfirmDialog) {
+        ConfirmDialog(
+            title = stringResource(R.string.confirm_sign_out_title),
+            message = stringResource(R.string.confirm_sign_out_message),
+            confirmText = stringResource(R.string.sign_out),
+            onDismiss = { showSignOutConfirmDialog = false },
+            onConfirm = {
+                showSignOutConfirmDialog = false
+                onSignOut()
+            },
+            isDestructive = true
         )
     }
 }

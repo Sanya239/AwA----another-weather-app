@@ -12,6 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,6 +29,8 @@ fun FriendDetailsDialog(
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
 ) {
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(friend.name + "(@" + friend.tag+")" ) },
@@ -43,7 +49,7 @@ fun FriendDetailsDialog(
         },
         dismissButton = {
             TextButton(
-                onClick = onRemove,
+                onClick = { showConfirmDialog = true },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                 )
@@ -52,5 +58,19 @@ fun FriendDetailsDialog(
             }
         }
     )
+
+    if (showConfirmDialog) {
+        ConfirmDialog(
+            title = stringResource(R.string.confirm_remove_friend_title),
+            message = stringResource(R.string.confirm_remove_friend_message),
+            confirmText = stringResource(R.string.remove_friend),
+            onDismiss = { showConfirmDialog = false },
+            onConfirm = {
+                showConfirmDialog = false
+                onRemove()
+            },
+            isDestructive = true
+        )
+    }
 }
 

@@ -25,6 +25,10 @@
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="remove_friend">Remove friend</string>
+    <string name="confirm_remove_friend_title">Remove friend?</string>
+    <string name="confirm_remove_friend_message">Are you sure you want to remove this friend from your friends list?</string>
+    <string name="confirm_sign_out_title">Sign out?</string>
+    <string name="confirm_sign_out_message">Are you sure you want to sign out of your account?</string>
     <string name="no_friends_message">You haven\'t added any friends yet</string>
     <string name="cannot_add_yourself">Cannot add yourself</string>
     <string name="all_good">All good</string>

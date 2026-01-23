@@ -24,6 +24,10 @@
     <string name="cancel">Отмена</string>
     <string name="close">Закрыть</string>
     <string name="remove_friend">Удалить друга</string>
+    <string name="confirm_remove_friend_title">Удалить друга?</string>
+    <string name="confirm_remove_friend_message">Вы уверены, что хотите удалить этого друга из списка друзей?</string>
+    <string name="confirm_sign_out_title">Выйти из аккаунта?</string>
+    <string name="confirm_sign_out_message">Вы уверены, что хотите выйти из аккаунта?</string>
     <string name="no_friends_message">Вы пока не добавили друзей</string>
     <string name="cannot_add_yourself">Нельзя добавить самого себя</string>
     <string name="all_good">Всё хорошо</string>

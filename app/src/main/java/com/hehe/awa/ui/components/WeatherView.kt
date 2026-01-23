@@ -34,7 +34,6 @@ fun WeatherView(weather: Weather?, modifier: Modifier = Modifier) {
             val iconUrl = "https:${w.current.condition.icon}"
 
             Column {
-                Text(stringResource(R.string.last_updated, w.current.last_updated))
                 Text(stringResource(R.string.condition, w.current.condition.text))
 
                 Row(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -54,6 +53,7 @@ fun WeatherView(weather: Weather?, modifier: Modifier = Modifier) {
                 Text(stringResource(R.string.wind, w.current.wind_kph))
                 Text(stringResource(R.string.humidity, w.current.humidity))
                 Text(stringResource(R.string.cloud, w.current.cloud))
+                Text(stringResource(R.string.last_updated, w.current.last_updated))
             }
         }
         if (weather == null){
